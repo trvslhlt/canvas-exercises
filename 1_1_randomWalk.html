@@ -1,0 +1,129 @@
+<html>
+<head>
+	<title>Canvas Template</title>
+	<!-- add script file reference -->
+	<!--
+	<script type="text/javascript" src=""</script>
+	-->
+</head>
+<body style="width=100%; height=600px; background-color:#DDD">
+
+<h1 id="frame_count"></h1>
+
+	<div style="margin: 0px auto; width:600px">
+		<canvas id="myCanvas" width="600px", height="600px" style="border:1px solid #000;"></canvas>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+window.requestAnimationFrame = function() {
+	return window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		window.msRequestAnimationFrame ||
+		window.oRequestAnimationFrame ||
+		function(f) {
+			window.setTimeout(f,1e3/60);
+		}
+}();
+
+var $ = document.querySelector.bind(document);
+
+
+var fps = 30;
+var now;
+var then = Date.now();
+var interval = 1000/fps;
+var delta;
+ 
+function smartDraw() {
+	
+	requestAnimationFrame(smartDraw);
+	
+	now = Date.now();
+	delta = now - then;
+	//console.log(delta);
+	
+	if (delta > interval) {
+		
+		draw();
+	}
+}
+
+setup();
+smartDraw();
+
+////////////////////////////////////////////////////////////////
+
+
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+var pencil = {
+	x: canvas.width/2.0,
+	y: canvas.height/2.0
+};
+
+function setup(){
+	//pencil.x = 1;
+}
+
+function draw() {
+	//context.clearRect(0, 0, canvas.width, canvas.height);
+	context.fillStyle = "rgba(255,255,255,0.2)";
+	context.fillRect(0, 0, canvas.width, canvas.height);
+
+	var choice = Math.floor(Math.random()*4);
+	var size = 100;
+	var jumpDistance = size;
+
+	console.log(choice);
+
+	if (choice === 0) {
+		pencil.x += jumpDistance;
+	} else if (choice === 1) {
+		pencil.x -= jumpDistance;
+	} else if (choice === 2){
+		pencil.y += jumpDistance;
+	} else {
+		pencil.y -= jumpDistance;
+	};
+
+	if (pencil.x < 0) {pencil.x = 0};
+	if (pencil.x > canvas.width) {pencil.x = canvas.width};
+	if (pencil.y < 0) {pencil.y = 0};
+	if (pencil.y > canvas.height) {pencil.y = canvas.height};
+
+	var r = choice * 50;
+	context.fillStyle = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+	context.fillRect(pencil.x - size/2.0, pencil.y - size/2.0, size, size);
+
+}
+
+
+
+
+
+ 
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,93 @@
+<html>
+<head>
+	<title>Intro to Vectors</title>
+</head>
+<body style="width=100%; height=600px; background-color:#DDD">
+	<div style="width: 600px; height:600px; margin: 0px auto; background-color: #fff;">
+		<canvas width="600px" height="600px" style="border:1px solid #000;" id="myCanvas"></canvas>
+	</div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+setup();
+animate();
+
+var canvas;
+var context;
+var x;
+var y;
+var xVel;
+var yVel;
+var radius;
+
+function animate(){
+	reqAnimFrame = window.requestAnimationFrame       ||
+    			   window.mozRequestAnimationFrame    ||
+                   window.webkitRequestAnimationFrame ||
+                   window.msRequestAnimationFrame     ||
+                   window.oRequestAnimationFrame
+                   ;
+	reqAnimFrame(animate);
+	/////
+	draw();
+}
+
+function setup() {
+	canvas = document.getElementById("myCanvas");
+	context = canvas.getContext("2d");
+	x = canvas.width/2.0;
+	y = canvas.height/2.0;
+	radius = 10;
+	xVel = 2;
+	yVel = 3;	
+}
+
+function draw() {
+	context.fillStyle = 'rgb(0,0,0)';
+	context.fillRect(0,0,canvas.width,canvas.height);
+	context.fillStyle = 'rgb(255,255,255)';
+	context.beginPath();
+	context.arc(x, y, radius, 0, 2 * Math.PI, false);
+	context.fill();
+
+	if (x > canvas.width - radius || x < radius) {
+		xVel *= -1;
+	} 
+	if (y > canvas.height - radius || y < radius) {
+		yVel *= -1;
+	}
+	x += xVel;
+	y += yVel;
+}
+
+Vector = function(items){
+	this.items = items;
+}
+
+Vector.prototype.add = function(other){
+	var result[];
+	for (var i = 0; i < this.items; i++) {
+		result.push(this.items[i] + other.items[i]);
+	}
+	return new Vector(result);
+}
+
+Vector.prototype.subtract = function(other){
+	var result[];
+	for (var i = 0; i < this.items; i++) {
+		result.push(this.items[i] + other.items[i]);
+	return new Vector(result);
+}
+
+</script>
+
+
+
+
+
+
+
+

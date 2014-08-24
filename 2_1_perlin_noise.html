@@ -1,0 +1,119 @@
+<html>
+<head>
+	<title>Canvas Template</title>
+	<!-- add script file reference -->
+	<!--
+	<script type="text/javascript" src=""</script>
+	-->
+	<script type="text/javascript" src="perlin.js"></script>
+</head>
+<body style="width=100%; height=600px; background-color:#DDD">
+
+<h1 id="frame_count"></h1>
+
+	<div style="margin: 0px auto; width:600px">
+		<canvas id="myCanvas" width="600px", height="600px" style="border:1px solid #000;"></canvas>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+window.requestAnimationFrame = function() {
+	return window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		window.msRequestAnimationFrame ||
+		window.oRequestAnimationFrame ||
+		function(f) {
+			window.setTimeout(f,1e3/60);
+		}
+}();
+
+var $ = document.querySelector.bind(document);
+
+
+var fps = 30;
+var now;
+var then = Date.now();
+var interval = 1000/fps;
+var delta;
+ 
+function smartDraw() {
+	
+	requestAnimationFrame(smartDraw);
+	
+	now = Date.now();
+	delta = now - then;
+	//console.log(delta);
+	
+	if (delta > interval) {
+		
+		draw();
+	}
+}
+
+setup();
+smartDraw();
+
+////////////////////////////////////////////////////////////////
+
+
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+var pencil = {
+	x: canvas.width/2.0,
+	y: canvas.height/2.0,
+	r: 128,
+	g: 128,
+	b: 128,
+	iteration: 0
+};
+
+function setup(){
+	//pencil.x = 1;
+	noise.seed(Math.random());
+}
+
+function draw() {
+
+	var horizontalStep = 2;
+
+	if (!pencil.iteration) { 
+		context.fillStyle = "#fff"; 
+		context.fillRect(0, 0, canvas.width, canvas.height);
+	}
+
+	if (!(pencil.iteration % canvas.width)) {
+		context.fillStyle = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+	}
+
+	var molasses = 20.01;
+
+	var amp = noise.perlin2(pencil.iteration / molasses, pencil.iteration / molasses);
+	context.fillRect(pencil.iteration % canvas.width, canvas.height, horizontalStep, amp * canvas.height - canvas.height/2.0);
+
+	pencil.iteration += horizontalStep;
+
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

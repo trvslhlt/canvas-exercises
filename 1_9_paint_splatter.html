@@ -1,0 +1,168 @@
+<html>
+<head>
+	<title>Canvas Template</title>
+	<!-- add script file reference -->
+	<!--
+	<script type="text/javascript" src=""</script>
+	-->
+</head>
+<body style="width=100%; height=600px; background-color:#DDD">
+
+<h1 id="frame_count"></h1>
+
+	<div style="margin: 0px auto; width:600px">
+		<canvas id="myCanvas" width="600px", height="600px" style="border:1px solid #000;"></canvas>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+window.requestAnimationFrame = function() {
+	return window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		window.msRequestAnimationFrame ||
+		window.oRequestAnimationFrame ||
+		function(f) {
+			window.setTimeout(f,1e3/60);
+		}
+}();
+
+var $ = document.querySelector.bind(document);
+
+
+var fps = 30;
+var now;
+var then = Date.now();
+var interval = 1000/fps;
+var delta;
+ 
+function smartDraw() {
+	
+	requestAnimationFrame(smartDraw);
+	
+	now = Date.now();
+	delta = now - then;
+	//console.log(delta);
+	
+	if (delta > interval) {
+		
+		draw();
+	}
+}
+
+setup();
+smartDraw();
+
+////////////////////////////////////////////////////////////////
+
+
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+var pencil = {
+	x: canvas.width/2.0,
+	y: canvas.height/2.0,
+	r: 128,
+	g: 128,
+	b: 128,
+	iteration: 0
+};
+
+function setup(){
+	//pencil.x = 1;
+}
+
+function draw() {
+
+	pencil.iteration++;
+	var choice = Math.random();
+	var size = 30;
+	var iterationsBeforeBigJump = 100;
+	var bigJumpFactor = 4;
+	var optJumpDistance = Math.abs(randomWithStDevAndMeanAndResolution(size,size,4));
+	var jumpDistance = (pencil.iteration % iterationsBeforeBigJump == 0) ? optJumpDistance * bigJumpFactor : optJumpDistance;
+
+	if (choice < 0.25) {
+		pencil.x += jumpDistance;
+	} else if (choice  < 0.50) {
+		pencil.x -= jumpDistance;
+	} else if (choice < 0.75){
+		pencil.y += jumpDistance;
+	} else {
+		pencil.y -= jumpDistance;
+	};
+
+	if (pencil.x < 0) {pencil.x = 0};
+	if (pencil.x > canvas.width) {pencil.x = canvas.width};
+	if (pencil.y < 0) {pencil.y = 0};
+	if (pencil.y > canvas.height) {pencil.y = canvas.height};
+
+	var colorStDev = 5;
+	pencil.r += randomWithStDevAndMeanAndResolution(colorStDev,0,4);
+	pencil.g += randomWithStDevAndMeanAndResolution(colorStDev,0,4);
+	pencil.b += randomWithStDevAndMeanAndResolution(colorStDev,0,4);
+
+	///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! how do you loop through a select group of properties?/////////!!!!!!!!!!!!!!!!!
+	// var colorValArray = [pencil.r, pencil.g, pencil.b];
+	// for (var i = 0; i < colorValArray.length; i++) {
+	// 	if(colorValArray[i] > 255 || colorValArray[i] < 0){
+	// 		console.log(colorValArray[i]);
+	// 		colorValArray[i] = 128;
+	// 		console.log(colorValArray[i]);
+	// 	}
+	// };
+
+	if(pencil.r > 255 || pencil.r < 0){pencil.r = 128};
+	if(pencil.g > 255 || pencil.g < 0){pencil.g = 128};
+	if(pencil.b > 255 || pencil.b < 0){pencil.b = 128};
+
+	var color = "rgb(" + Math.floor(pencil.r) + "," + Math.floor(pencil.g) + "," + Math.floor(pencil.b) + ")";
+	console.log(color);
+	context.fillStyle = color;
+	context.beginPath();
+	if (pencil.iteration % 4 == 0) {
+   		context.arc(pencil.x - optJumpDistance, pencil.y - optJumpDistance, optJumpDistance, 0, 2 * Math.PI/7, false);
+	} else {
+   		context.arc(pencil.x - optJumpDistance, pencil.y - optJumpDistance, optJumpDistance, 2 * Math.PI/5, Math.PI/5, true);
+	}
+    context.fill()
+
+}
+
+function randomSND(terms){
+	var retVal = 0
+	for (var i = 1; i <= terms; i++) {
+		retVal += (Math.random()*2) - 1;
+	}
+	return retVal/terms;
+}
+
+function randomWithStDevAndMeanAndResolution(stDev, mean, resolution){
+	return randomSND(resolution) * stDev + mean;
+}
+
+
+
+ 
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
